@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const path = process.env.REACT_APP_SERVER;
+console.log(process.env);
 
 export async function uploadFiles(files) {
     const data = new FormData();
