@@ -11,7 +11,7 @@ export async function uploadFiles(files) {
     return axios
         .post(`${path}/upload`, data, {})
         .then(res => res.data)
-        .catch(err => err.response.data);
+        .catch(err => err.response.data || err);
 }
 
 export default {
