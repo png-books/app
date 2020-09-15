@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Divider, List, Row, Select, Space, Upload } from 'antd';
+import React, { useState } from 'react';
+import { Button, Divider, List, Row, Select } from 'antd';
 import { DeleteTwoTone, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-
 
 const Component = styled.div`
     background-color: white;

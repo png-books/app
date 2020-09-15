@@ -5,7 +5,6 @@ import multer from 'multer';
 import { open } from 'sqlite';
 //const sqlite3 = require("sqlite3").verbose();
 import textract from 'textract';
-
 import api  from './bookapi.js';
 
 // status codes
@@ -85,7 +84,4 @@ async function runSql(statement, params) {
   return data.length == 1 ? data.pop() : data;
 }
 
-
-app.listen(8000, function () {
-  console.log('App running on port 8000');
-});
+app.listen(process.env.PORT || 8000);

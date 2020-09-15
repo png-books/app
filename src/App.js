@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import FileUpload from './components/FileUpload';
 import "antd/dist/antd.css";
-import axios from 'axios';
 import client from './client';
 
 
