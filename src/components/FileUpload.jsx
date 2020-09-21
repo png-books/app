@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Divider, List, Row, Select } from 'antd';
 import { DeleteTwoTone, LoadingOutlined, UploadOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -43,6 +43,32 @@ class FieldData {
 }
 
 function FileUpload({ isLoading, onUpload, testData }) {
+    const [data, setData] = useState();
+    const [loading, loadingStatus] = useState(false);
+  
+    /*
+    async function fileUpload(files) {
+        loadingStatus(true);
+        try {
+        const res = uploadFiles(files);
+        setData(res);
+        } catch(err) {
+        console.log(err);
+        setData({error: "blah"});
+        }
+    
+        
+    }
+    
+
+  useEffect(() => {
+    if (data) {
+      loadingStatus(false);
+    }
+  }, [data]);
+
+  const error = data && data.error;
+  */
     const [fileData, setFileData] = useState([]);
     const selectFiles = e => {
         let fileList = [];

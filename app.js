@@ -7,6 +7,23 @@ import { open } from 'sqlite';
 import textract from 'textract';
 import api  from './bookapi.js';
 
+// Firebase App (the core Firebase SDK) is always required and
+// must be listed before other Firebase SDKs
+import * as firebase from "firebase/app";
+
+// Add the Firebase services that you want to use
+import "firebase/auth";
+import "firebase/firestore";
+
+var firebaseConfig = {
+  apiKey: "AIzaSyDzjkTwCVZfga6MAl6aEKCflt8uojtkfNk",
+  authDomain: "book-app-3ee9d.firebaseapp.com",
+  databaseURL: "https://book-app-3ee9d.firebaseio.com",
+  projectId: "book-app-3ee9d",
+  storageBucket: "book-app-3ee9d.appspot.com",
+  appId: "1:446486827485:web:e835bd727def5a9f8f2634",
+};
+
 // status codes
 const OK = 200;
 const BAD_REQUEST = 400;
