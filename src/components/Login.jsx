@@ -3,7 +3,7 @@ import { Button, Card, Form, Input, Space, Tooltip, Typography } from 'antd';
 import { LockOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
-const { Paragraph, Text, Title} = Typography;
+const { Paragraph, Text, Title } = Typography;
 
 const LoginForm = styled(Card)`
     border-radius: 10px;
@@ -15,23 +15,23 @@ const LoginForm = styled(Card)`
     }
 `;
 
-function Login({errorMessage, onSubmit}){
+function Login({ errorMessage, onSubmit }) {
+    console.log(errorMessage);
     return (
         <LoginForm bordered={false}>
             <Space align="center" direction="vertical" size="middle">
                 <Title>Welcome</Title>
-                <br/>
+                <br />
                 <Paragraph>
                     This app was designed for
                      <Tooltip placement="top" title="me?">
-                         <Text className="tooltip"> Seth</Text>
-                         </Tooltip>.
+                        <Text className="tooltip"> Seth</Text>
+                    </Tooltip>.
                     </Paragraph>
-                   <Text>If this isn't you, feel free to click away.</Text>
-                   <Text>If this isn't you, feel free to click away.</Text>
+                <Text>If this isn't you, feel free to click away.</Text>
                 <Form onFinish={onSubmit}>
                     <Form.Item name="password">
-                        <Input.Password prefix={<LockOutlined/>}/>
+                        <Input.Password prefix={<LockOutlined />} />
                     </Form.Item>
                     <Form.Item>
                         <Button htmlType="submit">Enter</Button>
@@ -39,7 +39,6 @@ function Login({errorMessage, onSubmit}){
                 </Form>
                 <Paragraph type="danger">{errorMessage}</Paragraph>
             </Space>
-            
         </LoginForm>
     )
 }

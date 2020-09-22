@@ -1,6 +1,7 @@
 import app from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
+import { randomString } from './utils';
 
 const config = {
     apiKey: process.env.REACT_APP_KEY,
@@ -17,8 +18,11 @@ class Firebase {
         this.db = app.database();
     }
 
-    state() {
-        return this.db.ref('/users');
+    hash() {
+        return randomString(30);
+        //const chunks = Array.from(ran)
+        //return random.int(0, 15);
+        //const alpha = random() + random()
     }
 }
 
