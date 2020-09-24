@@ -1,55 +1,77 @@
+import React, { useState } from 'react';
+import { Layout, Menu,  PageHeader } from 'antd';
+import { LoginPage, MainPage, SideMenu } from './components';
 import firebase from './firebase';
-import React, { useState, useEffect } from 'react';
-import FileUpload from './components/FileUpload';
-import Login from './components/Login';
-import "antd/dist/antd.css";
+import 'antd/dist/antd.css';
 import "./app.css";
-import { Layout, Button } from 'antd';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-const { Header, Footer, Content } = Layout;
+
+function Page({ pageContent, title }) {
+  return (
+    <Layout.Content className="container">
+      <PageHeader>{title}</PageHeader>
+      {pageContent}
+    </Layout.Content>
+  )
+}
+
+const pages = {
+  'main': {
+    label: "List View",
+    content: <Page title="Your Book List" pageContent={<MainPage/>}/>
+  },
+  'data': {
+    label: "Charts",
+    content: <Page title="Data Visualizations" pageContent={<div>Hello</div>}/>
+  }
+};
+
+function Navbar({ onLogout, setPage }) {
+  return (
+    <Layout.Header>
+      <Menu onClick={e => setPage(e.key)} mode="horizontal" theme="dark">
+        {Object.keys(pages).map(pid => (
+          <Menu.Item key={pid}>{pages[pid].label}</Menu.Item>
+        ))}
+      </Menu>
+      <SideMenu onLogout={onLogout} />
+    </Layout.Header>
+  );
+}
+
+const email = 'rjbol94@gmail.com';
 
 function App() {
-  const [isAuthorized, authorize] = useState(false);
-  const [error, setError] = useState('');
-  const login = e => {
-    if (firebase.success(e.target.result)) {
-      authorize(true);
-    } else {
-      setError("Login failure.");
+  const [auth, setAuth] = useState(firebase.isAuthorized() || true);
+  const [currentPage, updatePage] = useState('main');
+  const[error, setError] = useState('');
+
+  async function handleAuthChange({ password }) {
+    try {
+      if (!auth) {
+        await firebase.login(email, password)
+      } else {
+        await firebase.logout();
+      }
+      setAuth(!auth);
+    } catch (err) {
+      this(err.message);
     }
   }
-  const logout = () => {
-    authorize(false);
-  }
-  return (
-    <Router>
-      <Layout>
-        {isAuthorized &&
-          <Header>
-            <Link to="/">Home</Link>
-            <Link to="/import">Users</Link>
-            <Button onClick={logout}>Logout</Button>
-          </Header>
-        }
-        <Content className="container">
-          <Switch>
-            <Route path="/import">
-              <FileUpload />
-            </Route>
-            <Route path="/">
-              {isAuthorized ? <div>Hello</div> : <Login errorMessage={error} onSubmit={login} />}
-            </Route>
-          </Switch>
-        </Content>
-        <Footer>Hi</Footer>
-      </Layout>
 
-    </Router>
+  return (
+    <Layout>
+      {auth ?
+      <>
+        <Navbar setPage={updatePage} onLogout={handleAuthChange.bind(setError)}/>
+        {pages[currentPage].content}
+      </>
+      :
+      <Layout.Content>
+        <LoginPage onLogin={handleAuthChange}/>
+      </Layout.Content>
+      }
+      <Layout.Footer>©2020 Created by Rebecca Bol</Layout.Footer>
+    </Layout>
   );
 }
 

@@ -12,13 +12,22 @@ header {
 }
 
 main {
-    height: 90%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 90%;
     font-size: calc(10px + 2vmin);
     color: white;
+    
+}
+
+main:not(.container) {
+    align-items: center;
+    justify-content: center;
+}
+
+main.container {
+    width: 100%;
+    height: 100%;
 }
 
 footer {
@@ -27,10 +36,56 @@ footer {
     background: rgba(255,255,255,0.5) !important;
 }
 
-.containera {
+.ant-page-header {
+    background: rgba(255,255,255,0.5);
+    font-size: calc(10px + 1.5vmin);
+    text-transform: uppercase;
+    font-family: 'Roboto Slab', serif;
+}
+
+.ant-page-header-content {
+    padding-top: 0px;
+}
+
+.ant-layout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.ant-layout-header .anticon {
+    color: white;
+}
+
+.page {
+  background-color: #fffafa;
+  height: 100%;
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.dropdown {
+    left: 0px;
+}
+.clickable {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+
+/* dark theme */
+.dark {
     background: #282c34 !important;
     color: white !important;
 }
 
-
-
+@keyframes exapand {
+    from { 
+        width:  500px;
+        height: 500px;
+    } to {
+        width: 100%;
+        height: 100%;
+    }
+}
