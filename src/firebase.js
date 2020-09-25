@@ -20,7 +20,7 @@ class Firebase {
 
     isAuthorized() {
         const user = this.auth.currentUser;
-        return user || false;
+        return user !== null;
     }
 
     login(email, password) {
@@ -32,10 +32,29 @@ class Firebase {
     }
 
     add(bookData) {
-        console.log(bookData);
-        return this.db.ref('/data/' + this.auth.currentUser.userId).set({
-            books: bookData
-        })
+        return this.get().set({
+            list: bookData
+        });
+    }
+
+    userId() {
+        return this.auth.currentUser.uid;
+    }
+
+    get() {
+        return this.db.ref('/data/' + this.userId());
+    }
+
+    init() {
+        var newPostKey = this.db.ref().child('data').push().key;
+        console.log()
+    }
+
+    init1() {
+        const userId = this.auth.currentUser.uid;
+        return this.db.ref('/data/' + userId).set({
+             list: []
+        });
     }
 }
 

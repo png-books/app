@@ -13,12 +13,13 @@ import DataTable from './Table';
 import FileUpload from './FileUpload';
 import AddData from './AddTab';
 const { TabPane } = Tabs;
+const { Title } = Typography;
 
 const Page = styled.div`
   background-color: #fffafa;
   height: 100%;
   padding: 10px;
-  width: 100%;
+  margin: 0px 24px;
   display: flex;
   flex-direction: column;
 
@@ -28,12 +29,26 @@ const Page = styled.div`
     justify-content: space-between;
   }
 
-  .ant-tabs-tabpane {
+  .ant-tabs {
     height: 100%;
     padding: 10px;
     width: 100%;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+  }
+
+  .ant-tabs-tabpane-active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .attr {
+    width: 100%;
+    text-align: left;
   }
 `;
 
@@ -45,17 +60,27 @@ function ActionButton({action, icon}) {
 
 const defaultPage = "default";
 
+async function getBooks() {
+  try {
+    const res = await firebase.get();
+    console.log(res);
+  } catch(err) {
+    console.log(err);
+  }
+}
+
 function Main() {
   const data = [];
-  const [pageState, setPageState] = useState("add");
+  getBooks();
+  const [pageState, setPageState] = useState(defaultPage);
   const [editing, updateEditingState] = useState(false);
   function updatePageState() {
     updateEditingState(this === "edit");
-    setPageState(this || defaultPage);
+    setPageState(this === "edit" ? defaultPage : this);
   }
 
-  function addData(itemsToAdd) {
-    firebase.add(itemsToAdd);
+  async function addData(itemsToAdd) {
+    await firebase.add(itemsToAdd);
     setPageState(defaultPage);
   }
 
@@ -65,8 +90,6 @@ function Main() {
     "upload": <UploadIcon/>,
     "configure": <ConfigureIcon/>
   };
-
-
 
   return (
     <Page className="page">
@@ -82,16 +105,24 @@ function Main() {
       </Space>
       <Tabs activeKey={pageState} animate={true}>
         <TabPane key={defaultPage}>
-          <DataTable data={data} editable={editing}/>
+            <DataTable data={data} editable={editing}/>
         </TabPane>
         <TabPane key="add">
           <AddData data={data} onSubmit={addData}/>
         </TabPane>
         <TabPane key="upload">
-          <div>Hello</div>
+          <FileUpload/>
         </TabPane>
         <TabPane key="configure">
-          <FileUpload/>
+          <div class="attr">
+            <Title level={1}>Attributes</Title>
+            <Title level={3}>Title, author, genre, etc.</Title>
+            <br/>
+            <Title level={1}>Default Sorting</Title>
+            <Title level={3}>Select a default attribute to see table sorted by</Title>
+            <br/>
+            <Title level={1}>Suggestions?</Title>
+          </div>
         </TabPane>
       </Tabs>
     </Page>

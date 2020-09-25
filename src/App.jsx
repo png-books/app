@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Layout, Menu,  PageHeader } from 'antd';
-import { LoginPage, MainPage, SideMenu } from './components';
+import { Layout, Menu,  PageHeader, Space } from 'antd';
+import { CopyrightOutlined, DeploymentUnitOutlined, GithubOutlined } from '@ant-design/icons';
+import { DataPage, LoginPage, MainPage, SideMenu } from './components';
 import firebase from './firebase';
 import 'antd/dist/antd.css';
 import "./app.css";
@@ -8,7 +9,7 @@ import "./app.css";
 function Page({ pageContent, title }) {
   return (
     <Layout.Content className="container">
-      <PageHeader>{title}</PageHeader>
+      <PageHeader ghost={false}>{title}</PageHeader>
       {pageContent}
     </Layout.Content>
   )
@@ -21,7 +22,7 @@ const pages = {
   },
   'data': {
     label: "Charts",
-    content: <Page title="Data Visualizations" pageContent={<div>Hello</div>}/>
+    content: <Page title="Data Visualizations" pageContent={<DataPage/>}/>
   }
 };
 
@@ -38,17 +39,16 @@ function Navbar({ onLogout, setPage }) {
   );
 }
 
-const email = 'rjbol94@gmail.com';
-
 function App() {
-  const [auth, setAuth] = useState(firebase.isAuthorized() || true);
+  const [auth, setAuth] = useState(firebase.isAuthorized());
   const [currentPage, updatePage] = useState('main');
   const[error, setError] = useState('');
+  console.log(auth);
 
   async function handleAuthChange({ password }) {
     try {
       if (!auth) {
-        await firebase.login(email, password)
+        await firebase.login(process.env.REACT_APP_DEFAULT_EMAIL, password)
       } else {
         await firebase.logout();
       }
@@ -70,7 +70,11 @@ function App() {
         <LoginPage onLogin={handleAuthChange}/>
       </Layout.Content>
       }
-      <Layout.Footer>©2020 Created by Rebecca Bol</Layout.Footer>
+      <Layout.Footer>
+      <div><DeploymentUnitOutlined/> <span class="invisible">rebeccabol/png-books</span></div>
+        <div><CopyrightOutlined/>2020 Rebecca Bol</div>
+        <div><GithubOutlined/> rebeccabol/png-books </div>
+        </Layout.Footer>
     </Layout>
   );
 }

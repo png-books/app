@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Avatar, Drawer, Dropdown, Menu, Space } from 'antd';
+import { Avatar, Button, Drawer, Dropdown, Menu, Space } from 'antd';
 import styled from 'styled-components';
 
 import { UserOutlined } from '@ant-design/icons';
@@ -8,6 +8,10 @@ const SideMenuButton = styled.div`
     width: 50px;
     cursor: pointer;
     text-align: center;
+`;
+
+const B = styled(Button)`
+    margin-right: 0px;
 `;
 
 function SideMenu({onLogout}) {
@@ -35,4 +39,13 @@ function SideMenu({onLogout}) {
     );
 }
 
-export default SideMenu;
+function LogoutButton({onLogout}) {
+
+    return (
+        <B onClick={onLogout} theme="dark">
+            Logout
+        </B>
+    )
+}
+
+export default LogoutButton;

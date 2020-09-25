@@ -4,7 +4,9 @@ import { DeleteTwoTone, LoadingOutlined, UploadOutlined } from '@ant-design/icon
 import styled from 'styled-components';
 
 const Component = styled.div`
-    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     width: 50%;
 
     input {
@@ -17,6 +19,10 @@ const Component = styled.div`
 
     .year-select * {
         cursor: pointer;
+    }
+
+    .ant-btn {
+        width: 50%;
     }
 `;
 
@@ -99,10 +105,12 @@ function FileUpload({ isLoading, onUpload, testData }) {
                 dataSource={fileData}
                 renderItem={file =>
                     <Row align="middle">
+                        <div>
                         <p>{file.name}</p>
                         <Select allowClear className="year-select" onChange={file.updateYear} value={file.year}>
                             {yearRange}
                         </Select>
+                        </div>
                         <DeleteTwoTone onClick={() => removeFile(file)}/>
                     </Row>
                 }

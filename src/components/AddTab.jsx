@@ -4,6 +4,7 @@ import { Avatar, AutoComplete, Button, Input, List, Tag, Typography } from 'antd
 
 import { StarFilled as Star } from '@ant-design/icons';
 import BookAPI from '../api/bookapi';
+import ellipsis from '../lotties/ellipsis.svg';
 import { xmlToJson } from '../api/utils';
 
 const { Text } = Typography;
@@ -20,8 +21,17 @@ const Item = styled.div`
     .ant-typography {
         margin: 10px;
     }
+`;
 
-    .
+const Panel = styled.div`
+    width: 50%;
+    height: 30vh;
+    margin-top: 25px;
+    margin-bottom: 20px;
+`;
+
+const Search = styled(AutoComplete)`
+    width: 80%;
 `;
 
 function ListItem(url, rating, label, year) {
@@ -42,14 +52,16 @@ function ListItem(url, rating, label, year) {
 }
 
 var globalTimeout = null;  
-var tempList = {};  
+var tempList = {};
 
 function AddForm({data, onSubmit}) {
     const [currentSearch, updateSearch] = useState('');
     const [results, updateResults] = useState([]);
     const [selectedItems, selectItems] = useState([]);
+    const [noResult, setNoResult] = useState(false);
 
     useEffect(() => {
+        setNoResult(false);
         if (globalTimeout != null) {
             clearTimeout(globalTimeout);
           }
@@ -60,6 +72,12 @@ function AddForm({data, onSubmit}) {
             }
           }, 200);
     }, [currentSearch])
+
+    useEffect(() => {
+        if (results.length == 0 && globalTimeout == null) {
+            setNoResult(true);
+        }
+    }, [results]);
     
     function makeListItem(object) {
         const { id, author, small_image_url, title, average_rating} = object.best_book;
@@ -68,7 +86,7 @@ function AddForm({data, onSubmit}) {
         const label = `${title} - ${author.name}`;
         const labelYear = !year.nil ? `(${year})` : '';
 
-        tempList[id] = { ...object.best_book, year, label };
+        tempList[id] = { id, author: author.name, title, year, label };
 
         return {
             value: id,
@@ -110,14 +128,20 @@ function AddForm({data, onSubmit}) {
     
     return (
         <>
-        <AutoComplete open={currentSearch} options={results} onChange={updateSearch} onSelect={selectItem} notFoundContent="No results">
+        <Search
+            open={currentSearch}
+            options={results}
+            onChange={updateSearch}
+            onSelect={selectItem}
+            notFoundContent={noResult ? "No Result" : <img src={ellipsis} alt="loading" height="25"/>}
+        >
             <Input.Search size="large" placeholder="Search books..." />
-        </AutoComplete>
-        <div>
+        </Search>
+        <Panel>
             {selectedItems.map(id => (
                 <Tag closable onClose={unselectItem.bind(id)}>{tempList[id].label}</Tag>
             ))}
-        </div>
+        </Panel>
         <Button onClick={onFinish}>
             Add Books
         </Button>
