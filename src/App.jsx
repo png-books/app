@@ -1,37 +1,79 @@
 import React, { useState } from 'react';
-import { Layout, Menu,  PageHeader, Space } from 'antd';
-import { CopyrightOutlined, DeploymentUnitOutlined, GithubOutlined } from '@ant-design/icons';
-import { DataPage, LoginPage, MainPage, SideMenu } from './components';
-import firebase from './firebase';
+import styled from 'styled-components';
+import { Layout, Menu, PageHeader } from 'antd';
 import 'antd/dist/antd.css';
+import { CopyrightOutlined, DeploymentUnitOutlined, GithubOutlined } from '@ant-design/icons';
+
+import firebase from './firebase';
+import { DataPage, LoginPage, MainPage, SideMenu } from './components';
+
 import "./app.css";
 
-function Page({ pageContent, title }) {
-  return (
-    <Layout.Content className="container">
-      <PageHeader ghost={false}>{title}</PageHeader>
-      {pageContent}
-    </Layout.Content>
-  )
-}
+const MainContainer = styled(Layout)`
+  background: none;
+  height: 100vh;
 
-const pages = {
-  'main': {
-    label: "List View",
-    content: <Page title="Your Book List" pageContent={<MainPage/>}/>
-  },
-  'data': {
-    label: "Charts",
-    content: <Page title="Data Visualizations" pageContent={<DataPage/>}/>
+  header, main, footer {
+    width: 100vw;
   }
-};
 
-function Navbar({ onLogout, setPage }) {
+  header {
+    height: 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px;
+    overflow: hidden;
+  }
+
+  main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  footer {
+    display: flex;
+    justify-content: space-between;
+    height: 2%;
+    padding: 0px;
+  }
+
+  main.auth {
+    height: 92%;
+    background: rgba(255,255,255,0.4);
+  }
+
+  .ant-page-header {
+    width: 100%;
+    background: none;
+    font-family: 'Roboto Slab', serif;
+    text-transform: uppercase;
+    font-size: calc(10px + 1.5vmin);
+    padding: 0px 20px;
+  }
+
+  header > button {
+    margin-right: 1vw;
+  }
+
+  .ant-page-header-content {
+    padding-top: 0px;
+  }
+
+  .invisible {
+    display: hidden;
+  }
+
+`;
+
+function Navbar({ onLogout, pages, setPage }) {
   return (
     <Layout.Header>
       <Menu onClick={e => setPage(e.key)} mode="horizontal" theme="dark">
-        {Object.keys(pages).map(pid => (
-          <Menu.Item key={pid}>{pages[pid].label}</Menu.Item>
+        {pages.map(page => (
+          <Menu.Item key={page.label}>{page.label}</Menu.Item>
         ))}
       </Menu>
       <SideMenu onLogout={onLogout} />
@@ -39,43 +81,51 @@ function Navbar({ onLogout, setPage }) {
   );
 }
 
-function App() {
-  const [auth, setAuth] = useState(firebase.isAuthorized());
-  const [currentPage, updatePage] = useState('main');
-  const[error, setError] = useState('');
-  console.log(auth);
+function Page({ title, content }) {
+  return (
+    <Layout.Content className={title && "auth"}>
+      {title && <PageHeader>{title}</PageHeader>}
+      {content}
+    </Layout.Content>
+  )
+}
 
-  async function handleAuthChange({ password }) {
-    try {
-      if (!auth) {
-        await firebase.login(process.env.REACT_APP_DEFAULT_EMAIL, password)
-      } else {
-        await firebase.logout();
-      }
-      setAuth(!auth);
-    } catch (err) {
-      this(err.message);
-    }
-  }
+function Footer() {
+  return (
+    <Layout.Footer>
+      <div><DeploymentUnitOutlined /> <span class="invisible">rebeccabol/png-books</span></div>
+      <div><CopyrightOutlined />2020 Rebecca Bol</div>
+      <div><GithubOutlined /> rebeccabol/png-books </div>
+    </Layout.Footer>
+  );
+}
+
+const pages = [{
+  label: "List View",
+  content: <Page title="Your Book List" content={<MainPage />} />
+},
+{
+  label: "Charts",
+  content: <Page title="Data Visualizations" content={<DataPage />} />
+}
+];
+
+function App({ fn }) {
+  const [auth, authorize] = useState(true);
+  const [currentPage, updatePage] = useState(0);
+
+  const updateAuth = (state) => () => authorize(state);
+
+  const login = (password, errorForm) => fn(firebase.login, updateAuth(true), errorForm, process.env.REACT_APP_DEFAULT_EMAIL, password);
+  const logout = () => fn(firebase.logout, updateAuth(false));
+  const tryThis = ({ password }) => fn(firebase.login, () => console.log("success"), console.error, process.env.REACT_APP_DEFAULT_EMAIL, password);
 
   return (
-    <Layout>
-      {auth ?
-      <>
-        <Navbar setPage={updatePage} onLogout={handleAuthChange.bind(setError)}/>
-        {pages[currentPage].content}
-      </>
-      :
-      <Layout.Content>
-        <LoginPage onLogin={handleAuthChange}/>
-      </Layout.Content>
-      }
-      <Layout.Footer>
-      <div><DeploymentUnitOutlined/> <span class="invisible">rebeccabol/png-books</span></div>
-        <div><CopyrightOutlined/>2020 Rebecca Bol</div>
-        <div><GithubOutlined/> rebeccabol/png-books </div>
-        </Layout.Footer>
-    </Layout>
+    <MainContainer>
+      {auth && <Navbar pages={pages} setPage={updatePage} onLogout={logout} />}
+      {auth ? pages[currentPage].content : (<Page content={<LoginPage onLogin={login} />} />)}
+      {!auth && <Footer />}
+    </MainContainer>
   );
 }
 

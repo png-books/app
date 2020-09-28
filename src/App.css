@@ -1,13 +1,4 @@
-section {
-    background: none !important;
-    height: 100vh;
-}
-
-section > * {
-    width: 100vw !important;
-}
-
-header {
+/*header {
     height: 8%;
 }
 
@@ -17,7 +8,12 @@ main {
     height: 90%;
     font-size: calc(10px + 2vmin);
     color: white;
-    
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 main:not(.container) {
@@ -82,19 +78,7 @@ footer {
   font-size: 20px;
 }
 
-
-/* dark theme */
 .dark {
     background: #282c34 !important;
     color: white !important;
-}
-
-@keyframes exapand {
-    from { 
-        width:  500px;
-        height: 500px;
-    } to {
-        width: 100%;
-        height: 100%;
-    }
-}
+}*/
