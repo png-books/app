@@ -1,13 +1,5 @@
 const CHARS = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-';
 
-export async function uploadFiles1(files) {
-  const data = new FormData();
-  for (let i = 0; i < files.length; i++) {
-    data.append('file', files[i].data)
-    data.append('years', files[i].year || 0);
-  }
-}
-
 function readFile(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
@@ -30,11 +22,11 @@ export function xmlToJson(xml) {
     obj = xml.nodeValue;
   }
 
-  var textNodes = [].slice.call(xml.childNodes).filter(function(node) {
+  var textNodes = [].slice.call(xml.childNodes).filter(function (node) {
     return node.nodeType === 3;
   });
   if (xml.hasChildNodes() && xml.childNodes.length === textNodes.length) {
-    obj = [].slice.call(xml.childNodes).reduce(function(text, node) {
+    obj = [].slice.call(xml.childNodes).reduce(function (text, node) {
       return text + node.nodeValue;
     }, "");
   } else if (xml.hasChildNodes()) {
@@ -62,9 +54,9 @@ export function randomString(length) {
   return Array.from({ length: length }).map(() => CHARS[randomInt(0, CHARS.length)]).join('');
 }
 
-export async function uploadFiles(fileData) {
+export async function parseText(data) {
   const dataArray = {};
-  for (const file of fileData) {
+  for (const file of data) {
     console.log(file);
     readFile(file.data);
     //dataArray[file.year] = await parseFile(file.data);
@@ -73,7 +65,6 @@ export async function uploadFiles(fileData) {
 }
 
 export default {
-  uploadFiles,
   randomString,
   xmlToJson
 }
